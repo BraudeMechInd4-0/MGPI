@@ -200,7 +200,3 @@ MGPI_forJGCD/
 ```
 
 ---
-
-## License
-
-TBD
