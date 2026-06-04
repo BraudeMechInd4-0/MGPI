@@ -194,10 +194,9 @@ while true
     om1 = (tend+tstart)/2;
     P1 = om2*P_;
     %% Get the function g using picard iterations
-    eAbs = inf;
-    eRel = inf;
+    err = inf;
     i = 0;
-    while (eAbs  > AbsTol || eRel > RelTol) && i<maxIter
+    while err > 1 && i<maxIter
         F = ODEFUN(om2.*tau+om1,xold); % the VMPCM uses F = ode(input{:}).*omega2; because dx/dtau = dx/dt.dtau/dt, but APC seemed to have accounted for that in the next line
         bi = X0 + P1 * A * F;
         xnew = C*bi;
@@ -208,11 +207,8 @@ while true
             xout = NaN(1, vector_length);  % Return consistent dimensions with NaN
             return
         end
-        diff_  = abs(xnew - xold);
-        scale_ = max(abs(xnew), abs(xold)) + RelTol;%AbsTol/10;
-        rel_   = diff_ ./ scale_;
-        eAbs   = max(diff_,  [], 'all');
-        eRel   = max(rel_,   [], 'all');
+        wt  = AbsTol + RelTol .* max(abs(xnew), abs(xold));
+        err = max(abs(xnew - xold) ./ wt, [], 'all');
         xold = xnew;
         i = i+1;
     end
