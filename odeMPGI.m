@@ -275,6 +275,12 @@ while true
         model.ts(model_counter) = tend;
     end
     if lastrunflag
+        if outputmodel
+            model.ts    = model.ts(1:model_counter);
+            model.bi    = model.bi(1:model_counter-1,:,:);
+            model.iters = model.iters(1:model_counter-1);
+            model.alpha = model.alpha(1:model_counter-1);
+        end
         return
     end
     firstpos = lastpos;
